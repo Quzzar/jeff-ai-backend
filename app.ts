@@ -13,10 +13,12 @@ initVocalMind();
 
 const server = Bun.serve({
   async fetch(req) {
-    let response;
+    let response: Response;
     const url = new URL(req.url);
     if (url.pathname === '/convo' && req.method === 'POST') {
+      console.log(req);
       response = await handleConvoInput(req);
+      console.log(response);
     } else if (url.pathname === '/npcs' && req.method === 'GET') {
       response = await handleNPCs(req);
     } else {
