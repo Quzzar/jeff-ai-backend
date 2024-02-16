@@ -177,6 +177,9 @@ Output: {"x": "0.245", "y": "0.401"}
 Input: red
 Output: {"x": "0.640", "y": "0.330"}
 
+Input: warm room light
+Output: {"x": "0.4994", "y": "0.4153"}
+
 
 Input: ${color}
       `.trim(),
@@ -200,7 +203,7 @@ Input: ${color}
       }
     } catch (e) {}
   }
-  return { x: 0.459, y: 0.41 };
+  return { x: 0.4994, y: 0.4153 };
 }
 
 function turnOff(npc: NPC) {
