@@ -1,0 +1,16 @@
+{
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "bun run --watch app.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "vocalmind": "^1.0.22"
+  }
+}
