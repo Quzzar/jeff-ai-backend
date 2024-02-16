@@ -39,7 +39,12 @@ export function processResponse(npc: NPC, response: string): string | null {
   let action: Action | null = null;
   if (actionStr) {
     try {
-      action = JSON.parse(`{${actionStr}`.replace(/'/g, '"')) as Action;
+      action = JSON.parse(
+        `{${actionStr}`
+          .replace(/^[`"']+|[`"']+$/g, '')
+          .replace(/'/g, '"')
+          .replace(/`/g, '"')
+      ) as Action;
     } catch (e) {
       console.error(e);
       return response;
