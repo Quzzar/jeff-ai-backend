@@ -16,9 +16,7 @@ const server = Bun.serve({
     let response: Response;
     const url = new URL(req.url);
     if (url.pathname === '/convo' && req.method === 'POST') {
-      console.log(req);
       response = await handleConvoInput(req);
-      console.log(response);
     } else if (url.pathname === '/npcs' && req.method === 'GET') {
       response = await handleNPCs(req);
     } else {
@@ -54,8 +52,6 @@ async function handleNPCs(req: Request) {
 }
 
 async function handleConvoInput(req: Request) {
-  console.log('got here 1');
-
   const npcToId = new URL(req.url).searchParams.get('to_id');
   const npcFromId = new URL(req.url).searchParams.get('from_id');
   if (!npcToId || !npcFromId) {
@@ -67,8 +63,6 @@ async function handleConvoInput(req: Request) {
       { status: 400 }
     );
   }
-
-  console.log('got here 2');
 
   // Convert form data to blob
   const formdata = await req.formData();
@@ -86,28 +80,21 @@ async function handleConvoInput(req: Request) {
     type: 'audio/wav',
   });
 
-  console.log('got here 3', audio.size);
-
   if (audio.size > 1200000) {
     return new Response('Audio file too large', { status: 400 });
   }
-
-  console.log('got here 4');
 
   // Send input audio file to VocalMind, output is a response audio file
   const output = await talkToNPC(parseInt(npcToId), parseInt(npcFromId), audio);
 
   if (output instanceof Blob && output.size > 0) {
-    console.log('got here 5');
     const response = new Response(output.stream(), {
       headers: {
         'Content-Type': output.type,
       },
     });
-    console.log('got here 7');
     return response;
   } else {
-    console.log('got here 6', output);
     return new Response('No valid Blob provided', { status: 400 });
   }
 }
