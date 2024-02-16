@@ -86,7 +86,7 @@ async function handleConvoInput(req: Request) {
     type: 'audio/wav',
   });
 
-  console.log('got here 3');
+  console.log('got here 3', audio.size);
 
   if (audio.size > 1200000) {
     return new Response('Audio file too large', { status: 400 });
@@ -107,7 +107,7 @@ async function handleConvoInput(req: Request) {
     console.log('got here 7');
     return response;
   } else {
-    console.log('got here 6');
+    console.log('got here 6', output);
     return new Response('No valid Blob provided', { status: 400 });
   }
 }
