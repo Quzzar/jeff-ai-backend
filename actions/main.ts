@@ -16,14 +16,20 @@ export function processTranscript(npc: NPC, transcript: string): string | null {
     return null;
   }
 
+  if (
+    transcript.toLowerCase().includes('restart yourself') ||
+    transcript.toLowerCase().includes('reset yourself')
+  ) {
+    turnOff(npc);
+    // Continue processing the transcript though
+  }
+
   return transcript;
 }
 
 type Action = { action: string; device: string; metadata?: string };
 
 export function processResponse(npc: NPC, response: string): string | null {
-  console.log('Response:', response);
-
   const parts = response.split('{');
   const responseStr = parts[0]?.trim() ?? '';
   const actionStr = parts[1]?.trim() ?? '';
@@ -34,6 +40,7 @@ export function processResponse(npc: NPC, response: string): string | null {
       responseStr.toLowerCase().includes('later dude'))
   ) {
     turnOff(npc);
+    return response;
   }
 
   let action: Action | null = null;
@@ -41,9 +48,10 @@ export function processResponse(npc: NPC, response: string): string | null {
     try {
       action = JSON.parse(
         `{${actionStr}`
-          .replace(/^[`"']+|[`"']+$/g, '')
+          .replace(/^[`"'*]+|[`"'*]+$/g, '')
           .replace(/'/g, '"')
           .replace(/`/g, '"')
+          .replace(/\\/g, '')
       ) as Action;
     } catch (e) {
       console.error(e);

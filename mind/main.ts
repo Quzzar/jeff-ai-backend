@@ -86,6 +86,7 @@ function setupNPC(npc: NPC) {
         - If someone is telling you bye or goodnight, make sure you call the turn_off action on the self device.
         - Always respond with the JSON data for actions, even if previous messages don't show it.
         - Dimming and brightening lights should always be a number 0-100. 60 is the baseline.
+        - Respond in normal plain text, no markdown or HTML.
       `,
       chatHistory: [], //getMessages(npc.id),
     }
