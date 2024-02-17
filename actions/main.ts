@@ -7,10 +7,10 @@ const HUE_APP_KEY = process.env.HUE_APP_KEY ?? '';
 
 export function processTranscript(npc: NPC, transcript: string): string | null {
   if (
-    (transcript.toLowerCase().includes(`Hey ${npc.name}`.toLowerCase()) ||
-      transcript.toLowerCase().includes(`Hey, ${npc.name}`.toLowerCase()) ||
-      transcript.toLowerCase().includes(`Sup ${npc.name}`.toLowerCase()) ||
-      transcript.toLowerCase().includes(`Sup, ${npc.name}`.toLowerCase())) &&
+    (transcript.includes(`Hey ${npc.name}`) ||
+      transcript.includes(`Hey, ${npc.name}`) ||
+      transcript.includes(`Sup ${npc.name}`) ||
+      transcript.includes(`Sup, ${npc.name}`)) &&
     !npc.isActive
   ) {
     makeActiveNPC(npc.id, true);
