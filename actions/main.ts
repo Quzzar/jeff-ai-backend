@@ -10,7 +10,9 @@ export function processTranscript(npc: NPC, transcript: string): string | null {
     (transcript.includes(`Hey ${npc.name}`) ||
       transcript.includes(`Hey, ${npc.name}`) ||
       transcript.includes(`Sup ${npc.name}`) ||
-      transcript.includes(`Sup, ${npc.name}`)) &&
+      transcript.includes(`Sup, ${npc.name}`) ||
+      transcript.includes(`What's up  ${npc.name}`) ||
+      transcript.includes(`What's up, ${npc.name}`)) &&
     !npc.isActive
   ) {
     makeActiveNPC(npc.id, true);
