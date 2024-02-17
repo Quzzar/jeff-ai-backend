@@ -6,7 +6,13 @@ const HUE_BRIDGE_IP = process.env.HUE_BRIDGE_IP ?? '';
 const HUE_APP_KEY = process.env.HUE_APP_KEY ?? '';
 
 export function processTranscript(npc: NPC, transcript: string): string | null {
-  if (transcript.includes(npc.name) && !npc.isActive) {
+  if (
+    (transcript.toLowerCase().includes(`hey ${npc.name}`) ||
+      transcript.toLowerCase().includes(`hey, ${npc.name}`) ||
+      transcript.toLowerCase().includes(`sup ${npc.name}`) ||
+      transcript.toLowerCase().includes(`sup, ${npc.name}`)) &&
+    !npc.isActive
+  ) {
     makeActiveNPC(npc.id, true);
     npc.isActive = true;
     setChatMessages(npc.id, []);
