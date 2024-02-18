@@ -11,6 +11,8 @@ export function processTranscript(npc: NPC, transcript: string): string | null {
       transcript.includes(`Hey, ${npc.name}`) ||
       transcript.includes(`Sup ${npc.name}`) ||
       transcript.includes(`Sup, ${npc.name}`) ||
+      transcript.includes(`Yo ${npc.name}`) ||
+      transcript.includes(`Yo, ${npc.name}`) ||
       transcript.includes(`What's up  ${npc.name}`) ||
       transcript.includes(`What's up, ${npc.name}`)) &&
     !npc.isActive
@@ -38,44 +40,49 @@ export function processTranscript(npc: NPC, transcript: string): string | null {
 type Action = { action: string; device: string; metadata?: string };
 
 export function processResponse(npc: NPC, response: string): string | null {
-  const parts = response.split('{');
+  const parts = response.split('[');
   const responseStr = parts[0]?.trim() ?? '';
   const actionStr = parts[1]?.trim() ?? '';
 
-  if (
-    !actionStr &&
-    (responseStr.toLowerCase().includes('later, dude') ||
-      responseStr.toLowerCase().includes('later dude'))
-  ) {
-    turnOff(npc);
-    return response;
-  }
+  // Might not need this anymore //
+  // if (
+  //   !actionStr &&
+  //   (responseStr.toLowerCase().includes('later, dude') ||
+  //     responseStr.toLowerCase().includes('later dude'))
+  // ) {
+  //   turnOff(npc);
+  //   return response;
+  // }
 
-  let action: Action | null = null;
+  let actions: Action[] | null = null;
   if (actionStr) {
     try {
-      action = JSON.parse(
-        `{${actionStr}`
+      actions = JSON.parse(
+        `[${actionStr}`
           .replace(/^[`"'*]+|[`"'*]+$/g, '')
           .replace(/'/g, '"')
           .replace(/`/g, '"')
           .replace(/\\/g, '')
-      ) as Action;
+      ) as Action[];
     } catch (e) {
       console.error(e);
       return response;
     }
   }
-  if (!action || !action.action) {
+  if (!actions || !Array.isArray(actions) || actions.length === 0) {
     return response;
   }
-  action = {
-    action: action.action?.trim().toLowerCase(),
-    device: action.device?.trim().toLowerCase(),
-    metadata: action.metadata?.trim().toLowerCase(),
-  };
 
-  handleActionCommand(npc, action);
+  (async () => {
+    // Execute in order
+    for (let action of actions) {
+      await handleActionCommand(npc, {
+        action: action.action?.trim().toLowerCase(),
+        device: action.device?.trim().toLowerCase(),
+        metadata: action.metadata?.trim().toLowerCase(),
+      });
+    }
+  })();
 
   return response;
 }
@@ -129,6 +136,9 @@ function getLightIds(device: string): string[] {
   }
   if (device.includes('bedroom')) {
     return [process.env.HUE_BEDROOM_LIGHT_ID!];
+  }
+  if (device.includes('bathroom')) {
+    return [process.env.HUE_BATHROOM_LIGHT_ID!];
   }
 
   return [];

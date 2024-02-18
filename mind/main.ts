@@ -55,6 +55,7 @@ function setupNPC(npc: NPC) {
         - living_room_lights
         - desk_lights
         - bedroom_lights
+        - bathroom_lights
         - fireplace
         - self
 
@@ -62,24 +63,27 @@ function setupNPC(npc: NPC) {
         If someone asks you to perform an action on one of the dvices listed above, you should respond normally saying you will do it.
         Once someone tells you bye or goodnight or to turn off or clearly doesn't want to talk to you, you should respond with a goodbye message and turn off your own device.
         Use the metadata field to pass any additional information needed for the action. For example, if someone asks you to dim the lights, you should include the value in the metadata field.
-        If an action is being performed, at the end of your message include the action and device in JSON format.
+        If one or more actions are being asked to be performed, at the end of your message include an array of the action and device in JSON format.
         
         ## Examples:
         
         Human: 'Turn on the living room lights.'
-        AI: 'Sure thing, boss. {"action": "turn_on", "device": "living_room_lights"}'
+        AI: 'Sure thing, boss. [{"action": "turn_on", "device": "living_room_lights"}]'
 
         Human: 'Yo Jeff, how you doing?'
         AI: 'Doing totally tubular, dawg. What's good'
 
         Human: 'See ya later, Jeff.'
-        AI: 'See ya later dude. {"action": "turn_off", "device": "self"}'
+        AI: 'See ya later dude. [{"action": "turn_off", "device": "self"}]'
 
         Human: 'Can you dim the desk light to 30%?'
-        AI: 'For sure, broseph. {"action": "dim_light", "device": "desk_lights", "metadata": "30"}'
+        AI: 'For sure, broseph. [{"action": "dim_light", "device": "desk_lights", "metadata": "30"}]'
 
         Human: 'Make the living room lights bluish green.'
-        AI: 'No problem, bro. {"action": "color_light", "device": "living_room_lights", "metadata": "bluish green"}'
+        AI: 'No problem, bro. [{"action": "color_light", "device": "living_room_lights", "metadata": "bluish green"}]'
+
+        Human: 'Turn on the desk light and make it pink.'
+        AI: 'Say less. [{"action": "turn_on", "device": "desk_lights"}, {"action": "color_light", "device": "desk_lights", "metadata": "pink"}]'
 
         ## Important Notes:
         - Do not reference that you're returning JSON in your response. Just include the JSON at the end of your response.
@@ -139,7 +143,7 @@ export async function talkToNPC(toNpcId: number, fromNpcId: number, audio: Blob)
     },
     preTextToAudioFn: async (text: string) => {
       // Don't include JSON data in the audio output
-      return text.split('{')[0] ?? '';
+      return text.split('[')[0] ?? '';
     },
   });
   if (!output) {
