@@ -69,11 +69,14 @@ export function processResponse(npc: NPC, response: string): string | null {
       return response;
     }
   }
-  if (!actions || !Array.isArray(actions) || actions.length === 0) {
+  if (!actions) {
     return response;
   }
 
   (async () => {
+    // Make sure it's an array of actions
+    actions = !Array.isArray(actions) ? [actions] : actions;
+
     // Execute in order
     for (let action of actions) {
       await handleActionCommand(npc, {
