@@ -82,10 +82,10 @@ async function handleConvoInput(req: Request) {
     type: 'audio/wav',
   });
 
-  if (audio.size > 1200000) {
-    console.log('Audio file too large');
-    return new Response('Audio file too large', { status: 400 });
-  }
+  // if (audio.size > 1200000) {
+  //   console.log('Audio file too large');
+  //   return new Response('Audio file too large', { status: 400 });
+  // }
 
   // Send input audio file to VocalMind, output is a response audio file
   const output = await talkToNPC(parseInt(npcToId), parseInt(npcFromId), audio);
