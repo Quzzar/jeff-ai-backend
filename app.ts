@@ -90,6 +90,8 @@ async function handleConvoInput(req: Request) {
   // Send input audio file to VocalMind, output is a response audio file
   const output = await talkToNPC(parseInt(npcToId), parseInt(npcFromId), audio);
 
+  console.log(audio, output);
+
   if (output instanceof Blob && output.size > 0) {
     const response = new Response(output.stream(), {
       headers: {
