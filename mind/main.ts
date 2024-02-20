@@ -146,6 +146,9 @@ export async function talkToNPC(toNpcId: number, fromNpcId: number, audio: Blob)
       return text.split('[')[0] ?? '';
     },
   });
+
+  console.log(output);
+
   if (!output) {
     return null;
   }
