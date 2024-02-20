@@ -120,6 +120,7 @@ export async function talkToNPC(toNpcId: number, fromNpcId: number, audio: Blob)
       if (!toNPC) return null;
       console.log(transcript);
       const res = processTranscript(toNPC, transcript);
+      console.log(res);
       if (!res) {
         return null;
       }
@@ -132,6 +133,7 @@ export async function talkToNPC(toNpcId: number, fromNpcId: number, audio: Blob)
     postProcessorFn: async (response: string) => {
       if (!toNPC) return null;
       const res = processResponse(toNPC, response);
+      console.log(res);
       if (!res) {
         return null;
       }
@@ -147,13 +149,13 @@ export async function talkToNPC(toNpcId: number, fromNpcId: number, audio: Blob)
     },
   });
 
-  console.log(output);
+  console.log('Output ', output?.audio);
 
   if (!output) {
     return null;
   }
 
-  console.log(output.chatHistory);
+  //console.log(output.chatHistory);
 
   // Store most recent chat history
   setChatMessages(toNpcId, output.chatHistory);
