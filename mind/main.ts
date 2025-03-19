@@ -1,4 +1,10 @@
-import { OpenAIChatCompletion, OpenAITextToSpeech, OpenAIWhisper, VocalMind } from 'vocalmind';
+import {
+  ChatMessage,
+  OpenAIChatCompletion,
+  OpenAITextToSpeech,
+  OpenAIWhisper,
+  VocalMind,
+} from 'vocalmind';
 import { getMessages, getNPCs, setChatMessages } from '../db/main';
 import type { NPC } from '../db/predefined';
 import { processResponse, processTranscript } from '../actions/main';
@@ -29,12 +35,13 @@ function setupNPC(npc: NPC) {
       }),
       processor: new OpenAIChatCompletion({
         apiKey: OPEN_AI_KEY,
-        model: 'gpt-3.5',
+        model: 'gpt-4o',
       }),
       textToAudio: new OpenAITextToSpeech({
         apiKey: OPEN_AI_KEY,
         model: 'tts-1',
         voice: npc.voice,
+        speed: JSON.parse(npc.audioShift)?.speed || undefined,
       }),
     },
 
@@ -56,6 +63,7 @@ function setupNPC(npc: NPC) {
         - desk_lights
         - bedroom_lights
         - bathroom_lights
+        - vine_lights
         - fireplace
         - self
 
@@ -154,8 +162,6 @@ export async function talkToNPC(toNpcId: number, fromNpcId: number, audio: Blob)
   if (!output) {
     return null;
   }
-
-  //console.log(output.chatHistory);
 
   // Store most recent chat history
   setChatMessages(toNpcId, output.chatHistory);

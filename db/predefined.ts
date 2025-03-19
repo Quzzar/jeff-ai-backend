@@ -7,7 +7,7 @@ export interface NPC {
   skinColor: string;
   eyeColor: string;
   gender: string;
-  voice: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+  voice: 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'onyx' | 'nova' | 'sage' | 'shimmer';
   audioShift: string;
   description: string;
   relations: string;
@@ -25,7 +25,9 @@ export const PREDEFINED_NPCs: NPC[] = [
     eyeColor: 'Green',
     gender: 'Male',
     voice: 'echo',
-    audioShift: '{}',
+    audioShift: JSON.stringify({
+      speed: 1.05,
+    }),
     description: '',
     relations: ``,
     isActive: false,

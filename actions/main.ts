@@ -128,7 +128,8 @@ async function handleActionCommand(npc: NPC, action: Action) {
 }
 
 function getLightIds(device: string): string[] {
-  if (device.includes('living_room')) {
+  if (device.includes('living_room') || device.includes('bedroom') || device.includes('room')) {
+    // TEMP: While I only have 1 room, any room is this room
     return [process.env.HUE_LIVING_ROOM_LIGHT_1_ID!, process.env.HUE_LIVING_ROOM_LIGHT_2_ID!];
   }
   if (device.includes('desk')) {
@@ -137,7 +138,7 @@ function getLightIds(device: string): string[] {
   if (device.includes('fire')) {
     return [process.env.HUE_FIREPLACE_LIGHT_ID!];
   }
-  if (device.includes('bedroom')) {
+  if (device.includes('vine')) {
     return [process.env.HUE_BEDROOM_LIGHT_ID!];
   }
   if (device.includes('bathroom')) {

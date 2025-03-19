@@ -55,7 +55,6 @@ async function handleConvoInput(req: Request) {
   const npcToId = new URL(req.url).searchParams.get('to_id');
   const npcFromId = new URL(req.url).searchParams.get('from_id');
   if (!npcToId || !npcFromId) {
-    console.log('No NPC id found');
     return new Response(
       JSON.stringify({
         status: 'error',
@@ -69,7 +68,6 @@ async function handleConvoInput(req: Request) {
   const formdata = await req.formData();
   const file = formdata.get('file');
   if (!file) {
-    console.log('No audio file found');
     return new Response(
       JSON.stringify({
         status: 'error',
@@ -82,15 +80,8 @@ async function handleConvoInput(req: Request) {
     type: 'audio/wav',
   });
 
-  // if (audio.size > 1200000) {
-  //   console.log('Audio file too large');
-  //   return new Response('Audio file too large', { status: 400 });
-  // }
-
   // Send input audio file to VocalMind, output is a response audio file
-  const output = await talkToNPC(parseInt(npcToId), parseInt(npcFromId), audio);
-
-  console.log('Audio', audio, output);
+  const output = await talkToNPC(parseInt(npcToId), parseInt(npcFromId), audio as Blob);
 
   if (output instanceof Blob && output.size > 0) {
     const response = new Response(output.stream(), {
@@ -100,7 +91,6 @@ async function handleConvoInput(req: Request) {
     });
     return response;
   } else {
-    console.log('No valid Blob provided');
     return new Response('No valid Blob provided', { status: 400 });
   }
 }
